@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historia Clínica Odontológica</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8f9fa; font-family: Arial, sans-serif; }
+        .form-container { background: white; padding: 30px; margin: 20px auto; max-width: 900px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .form-title { background: #1e3a8a; color: white; text-align: center; padding: 15px; margin: -30px -30px 30px -30px; border-radius: 10px 10px 0 0; font-weight: bold; }
+        .section-header { background: #e3f2fd; padding: 8px 15px; margin: 20px -15px 15px -15px; font-weight: bold; color: #1565c0; border-left: 4px solid #1e3a8a; }
+        .checkbox-group { display: flex; flex-wrap: wrap; gap: 15px; margin: 10px 0; }
+        .checkbox-item { display: flex; align-items: center; gap: 5px; min-width: 120px; }
+        .odontograma-container { border: 2px solid #dee2e6; padding: 20px; margin: 20px 0; background: #f8f9fa; border-radius: 8px; }
+        .dental-arch { display: flex; justify-content: center; margin: 10px 0; gap: 5px; }
+        .tooth { width: 40px; height: 40px; border: 2px solid #333; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; background: white; cursor: pointer; position: relative; }
+        .tooth:hover { background: #e3f2fd; }
+        .tooth-number { position: absolute; top: -15px; font-size: 8px; color: #666; }
+        .lower-arch .tooth-number { bottom: -15px; top: auto; }
+        .legend { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin: 15px 0; font-size: 12px; }
+        .legend-item { display: flex; align-items: center; gap: 5px; }
+        .legend-symbol { width: 20px; height: 20px; border: 1px solid #333; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+        @media print { .print-btn { display: none; } body { background: white; } .form-container { box-shadow: none; margin: 0; max-width: none; } }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-title">HISTORIA CLÍNICA ODONTOLÓGICA</div>
+        <form id="historiaClinica">
+            <!-- DATOS DEL PACIENTE -->
+            <div class="section-header">DATOS DEL PACIENTE</div>
+            <div class="row">
+                <div class="col-md-4"><label class="form-label">Apellidos:</label><input type="text" class="form-control" name="apellidos"></div>
+                <div class="col-md-4"><label class="form-label">Nombres:</label><input type="text" class="form-control" name="nombres"></div>
+                <div class="col-md-2"><label class="form-label">Edad:</label><input type="number" class="form-control" name="edad"></div>
+                <div class="col-md-2"><label class="form-label">Sexo:</label><select class="form-control" name="sexo"><option value="">Seleccionar</option><option value="M">Masculino</option><option value="F">Femenino</option></select></div>
+            </div>
+            <div class="row">
+                <div class="col-md-3"><label class="form-label">Ocupación:</label><input type="text" class="form-control" name="ocupacion"></div>
+                <div class="col-md-3"><label class="form-label">Grado:</label><input type="text" class="form-control" name="grado"></div>
+                <div class="col-md-3"><label class="form-label">Teléfono:</label><input type="tel" class="form-control" name="telefono"></div>
+                <div class="col-md-3"><label class="form-label">Procedencia:</label><input type="text" class="form-control" name="procedencia"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-6"><label class="form-label">Dirección:</label><textarea class="form-control" name="direccion" rows="2"></textarea></div>
+                <div class="col-md-3"><label class="form-label">Estado Civil:</label><select class="form-control" name="estado_civil"><option value="">Seleccionar</option><option value="soltero">Soltero(a)</option><option value="casado">Casado(a)</option><option value="viudo">Viudo(a)</option><option value="divorciado">Divorciado(a)</option></select></div>
+                <div class="col-md-3"><label class="form-label">Fecha:</label><input type="date" class="form-control" name="fecha_consulta"></div>
+            </div>
+
+            <!-- MOTIVO DE CONSULTA -->
+            <div class="section-header">MOTIVO DE CONSULTA/ENFERMEDAD ACTUAL</div>
+            <textarea class="form-control" name="motivo_consulta" rows="4" placeholder="Describa el motivo de consulta y enfermedad actual..."></textarea>
+
+            <!-- ANTECEDENTES -->
+            <div class="section-header">ANTECEDENTES</div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="form-label"><strong>ANTECEDENTES PERSONALES:</strong></label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item"><input type="checkbox" name="ant_diabetes" id="diabetes"><label for="diabetes">Diabetes</label></div>
+                        <div class="checkbox-item"><input type="checkbox" name="ant_hipertension" id="hipertension"><label for="hipertension">Hipertensión</label></div>
+                        <div class="checkbox-item"><input type="checkbox" name="ant_epilepsia" id="epilepsia"><label for="epilepsia">Epilepsia</label></div>
+                        <div class="checkbox-item"><input type="checkbox" name="ant_cardiopatia" id="cardiopatia"><label for="cardiopatia">Cardiopatía</label></div>
+                        <div class="checkbox-item"><input type="checkbox" name="ant_hepatitis" id="hepatitis"><label for="hepatitis">Hepatitis</label></div>
+                        <div class="checkbox-item"><input type="checkbox" name="ant_asma" id="asma"><label for="asma">Asma</label></div>
+                        <div class="checkbox-item"><input type="checkbox" name="ant_alergia" id="alergia"><label for="alergia">Alergia</label></div>
+                        <div class="checkbox-item"><input type="checkbox" name="ant_vih" id="vih"><label for="vih">VIH</label></div>
+                    </div>
+                    <label class="form-label">Otros:</label><input type="text" class="form-control" name="otros_personales">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label"><strong>ANTECEDENTES FAMILIARES:</strong></label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item"><input type="checkbox" name="fam_diabetes" id="fam_diabetes"><label for="fam_diabetes">Diabetes</label></div>
+                        <div class="checkbox-item"><input type="checkbox" name="fam_hipertension" id="fam_hipertension"><label for="fam_hipertension">Hipertensión</label></div>
+                        <div class="checkbox-item"><input type="checkbox" name="fam_epilepsia" id="fam_epilepsia"><label for="fam_epilepsia">Epilepsia</label></div>
+                        <div class="checkbox-item"><input type="checkbox" name="fam_cardiopatia" id="fam_cardiopatia"><label for="fam_cardiopatia">Cardiopatía</label></div>
+                        <div class="checkbox-item"><input type="checkbox" name="fam_cancer" id="fam_cancer"><label for="fam_cancer">Cáncer</label></div>
+                        <div class="checkbox-item"><input type="checkbox" name="fam_tuberculosis" id="fam_tuberculosis"><label for="fam_tuberculosis">Tuberculosis</label></div>
+                    </div>
+                    <label class="form-label">Otros:</label><input type="text" class="form-control" name="otros_familiares">
+                </div>
+            </div>
+
+            <!-- FUNCIONES BIOLÓGICAS -->
+            <div class="section-header">FUNCIONES BIOLÓGICAS</div>
+            <div class="row">
+                <div class="col-md-3"><label class="form-label">Sueño:</label><div class="checkbox-group"><div class="checkbox-item"><input type="radio" name="sueno" value="normal" id="sueno_normal"><label for="sueno_normal">Normal</label></div><div class="checkbox-item"><input type="radio" name="sueno" value="alterado" id="sueno_alterado"><label for="sueno_alterado">Alterado</label></div></div></div>
+                <div class="col-md-3"><label class="form-label">Apetito:</label><div class="checkbox-group"><div class="checkbox-item"><input type="radio" name="apetito" value="normal" id="apetito_normal"><label for="apetito_normal">Normal</label></div><div class="checkbox-item"><input type="radio" name="apetito" value="alterado" id="apetito_alterado"><label for="apetito_alterado">Alterado</label></div></div></div>
+                <div class="col-md-3"><label class="form-label">Sed:</label><div class="checkbox-group"><div class="checkbox-item"><input type="radio" name="sed" value="normal" id="sed_normal"><label for="sed_normal">Normal</label></div><div class="checkbox-item"><input type="radio" name="sed" value="alterado" id="sed_alterado"><label for="sed_alterado">Alterado</label></div></div></div>
+                <div class="col-md-3"><label class="form-label">Orina:</label><div class="checkbox-group"><div class="checkbox-item"><input type="radio" name="orina" value="normal" id="orina_normal"><label for="orina_normal">Normal</label></div><div class="checkbox-item"><input type="radio" name="orina" value="alterado" id="orina_alterado"><label for="orina_alterado">Alterado</label></div></div></div>
+            </div>
+            <div class="row">
+                <div class="col-md-4"><label class="form-label">Deposiciones:</label><div class="checkbox-group"><div class="checkbox-item"><input type="radio" name="deposiciones" value="normal" id="dep_normal"><label for="dep_normal">Normal</label></div><div class="checkbox-item"><input type="radio" name="deposiciones" value="alterado" id="dep_alterado"><label for="dep_alterado">Alterado</label></div></div></div>
+                <div class="col-md-4"><label class="form-label">Estado de ánimo:</label><div class="checkbox-group"><div class="checkbox-item"><input type="radio" name="estado_animo" value="normal" id="animo_normal"><label for="animo_normal">Normal</label></div><div class="checkbox-item"><input type="radio" name="estado_animo" value="alterado" id="animo_alterado"><label for="animo_alterado">Alterado</label></div></div></div>
+                <div class="col-md-4"><label class="form-label">Otros:</label><input type="text" class="form-control" name="otros_funciones"></div>
+            </div>
+
+            <!-- EXAMEN CLÍNICO GENERAL -->
+            <div class="section-header">EXAMEN CLÍNICO GENERAL</div>
+            <div class="row">
+                <div class="col-md-4"><label class="form-label">Estado nutricional:</label><div class="checkbox-group"><div class="checkbox-item"><input type="checkbox" name="nutri_bueno" id="nutri_bueno"><label for="nutri_bueno">Bueno</label></div><div class="checkbox-item"><input type="checkbox" name="nutri_regular" id="nutri_regular"><label for="nutri_regular">Regular</label></div><div class="checkbox-item"><input type="checkbox" name="nutri_malo" id="nutri_malo"><label for="nutri_malo">Malo</label></div></div></div>
+                <div class="col-md-4"><label class="form-label">Postura:</label><div class="checkbox-group"><div class="checkbox-item"><input type="checkbox" name="postura_erecta" id="postura_erecta"><label for="postura_erecta">Erecta</label></div><div class="checkbox-item"><input type="checkbox" name="postura_encorvada" id="postura_encorvada"><label for="postura_encorvada">Encorvada</label></div></div></div>
+                <div class="col-md-4"><label class="form-label">Otros hallazgos:</label><input type="text" class="form-control" name="otros_hallazgos"></div>
+            </div>
+
+            <!-- SIGNOS VITALES -->
+            <div class="section-header">SIGNOS VITALES</div>
+            <div class="row">
+                <div class="col-md-3"><label class="form-label">Presión Arterial:</label><input type="text" class="form-control" name="presion_arterial" placeholder="120/80"></div>
+                <div class="col-md-3"><label class="form-label">Pulso:</label><input type="text" class="form-control" name="pulso" placeholder="por minuto"></div>
+                <div class="col-md-3"><label class="form-label">Temperatura:</label><input type="text" class="form-control" name="temperatura" placeholder="°C"></div>
+                <div class="col-md-3"><label class="form-label">Respiración:</label><input type="text" class="form-control" name="respiracion" placeholder="por minuto"></div>
+            </div>
+
+            <!-- ODONTOGRAMA -->
+            <div class="section-header">ODONTOGRAMA</div>
+            <div class="odontograma-container">
+                <div class="text-center mb-2"><strong>Arcada Superior</strong></div>
+                <div class="dental-arch upper-arch" id="upperArch"></div>
+                <div class="text-center mt-4 mb-2"><strong>Arcada Inferior</strong></div>
+                <div class="dental-arch lower-arch" id="lowerArch"></div>
+                <div class="legend">
+                    <div class="legend-item"><div class="legend-symbol" style="background: red;">X</div><span>Extracción</span></div>
+                    <div class="legend-item"><div class="legend-symbol" style="background: blue;">C</div><span>Caries</span></div>
+                    <div class="legend-item"><div class="legend-symbol" style="background: yellow;">O</div><span>Obturación</span></div>
+                    <div class="legend-item"><div class="legend-symbol" style="background: gray;">P</div><span>Prótesis</span></div>
+                    <div class="legend-item"><div class="legend-symbol" style="background: green;">R</div><span>Raíz</span></div>
+                </div>
+            </div>
+
+            <!-- PLAN DE TRATAMIENTO -->
+            <div class="section-header">PLAN DE TRATAMIENTO</div>
+            <textarea class="form-control" name="plan_tratamiento" rows="6" placeholder="Describa el plan de tratamiento detallado..."></textarea>
+
+            <!-- Botones -->
+            <div class="text-center print-btn mt-4">
+                <button type="button" class="btn btn-primary me-2" onclick="guardarHistoria()">Guardar Historia</button>
+                <button type="button" class="btn btn-secondary me-2" onclick="window.print()">Imprimir</button>
+                <button type="button" class="btn btn-outline-secondary me-2" onclick="limpiarFormulario()">Limpiar</button>
+                <button type="button" class="btn btn-success me-2" onclick="buscarPacientes()">Buscar Pacientes</button>
+                <button type="button" class="btn btn-info me-2" onclick="cargarArchivoHistoria()">Cargar Archivo</button>
+                <button type="button" class="btn btn-warning" onclick="exportarTodasHistorias()">Exportar Todas</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Crear odontograma dinámicamente
+        function createOdontogram() {
+            const upperTeeth = [18,17,16,15,14,13,12,11,21,22,23,24,25,26,27,28];
+            const lowerTeeth = [48,47,46,45,44,43,42,41,31,32,33,34,35,36,37,38];
+            
+            function createTooth(num, isUpper) {
+                return `<div class="tooth" data-tooth="${num}"><span class="tooth-number">${num}</span></div>`;
+            }
+            
+            document.getElementById('upperArch').innerHTML = upperTeeth.map(n => createTooth(n, true)).join('');
+            document.getElementById('lowerArch').innerHTML = lowerTeeth.map(n => createTooth(n, false)).join('');
+        }
+
+        // Funcionalidad odontograma
+        function initOdontogram() {
+            document.querySelectorAll('.tooth').forEach(tooth => {
+                tooth.addEventListener('click', function() {
+                    const num = this.dataset.tooth;
+                    const action = prompt(`Diente ${num}\nX=Extracción, C=Caries, O=Obturación, P=Prótesis, R=Raíz`);
+                    if (action) {
+                        const upperAction = action.toUpperCase();
+                        this.textContent = upperAction;
+                        const colors = {X:'red', C:'blue', O:'yellow', P:'gray', R:'green'};
+                        this.style.background = colors[upperAction] || 'white';
+                        this.style.color = upperAction === 'O' ? 'black' : 'white';
+                    }
+                });
+                
+                tooth.addEventListener('contextmenu', function(e) {
+                    e.preventDefault();
+                    const num = this.dataset.tooth;
+                    this.innerHTML = `<span class="tooth-number">${num}</span>`;
+                    this.style.background = 'white';
+                    this.style.color = 'black';
+                });
+            });
+        }
+
+        // Funciones principales
+        function recopilarDatos() {
+            const data = { id: Date.now(), fecha_creacion: new Date().toISOString() };
+            document.querySelectorAll('input, select, textarea').forEach(el => {
+                if (el.type === 'checkbox' || el.type === 'radio') {
+                    if (el.checked) data[el.name] = el.type === 'checkbox' ? 1 : el.value;
+                } else if (el.value) data[el.name] = el.value;
+            });
+            return data;
+        }
+
+        function guardarHistoria() {
+            const data = recopilarDatos();
+            if (!data.apellidos || !data.nombres) {
+                alert('Complete apellidos y nombres');
+                return;
+            }
+            
+            const historias = JSON.parse(localStorage.getItem('historiasClinicas') || '[]');
+            historias.push(data);
+            localStorage.setItem('historiasClinicas', JSON.stringify(historias));
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `historia_${data.apellidos}_${data.nombres}_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            alert(`Historia guardada. ID: ${data.id}`);
+
+            // Notificar al dashboard si está en iframe
+            if (window.parent && window.parent !== window) {
+                try {
+                    window.parent.recibirPacienteNuevo(data);
+                } catch (e) {
+                    console.log('No se pudo notificar al dashboard');
+                }
+            }
+        }
+
+        function buscarPacientes() {
+            const termino = prompt('Ingrese apellido o nombre:');
+            if (!termino) return;
+            
+            const historias = JSON.parse(localStorage.getItem('historiasClinicas') || '[]');
+            const resultados = historias.filter(h => 
+                (h.apellidos || '').toLowerCase().includes(termino.toLowerCase()) || 
+                (h.nombres || '').toLowerCase().includes(termino.toLowerCase())
+            );
+            
+            if (resultados.length > 0) {
+                mostrarResultadosBusqueda(resultados);
+            } else {
+                alert('No se encontraron pacientes');
+            }
+        }
+
+        function cargarArchivoHistoria() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const data = JSON.parse(e.target.result);
+                            llenarFormulario(data);
+                            alert('Historia cargada correctamente');
+                        } catch (error) {
+                            alert('Error al cargar el archivo');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+        }
+
+        function exportarTodasHistorias() {
+            const historias = JSON.parse(localStorage.getItem('historiasClinicas') || '[]');
+            if (historias.length === 0) {
+                alert('No hay historias guardadas');
+                return;
+            }
+            
+            const blob = new Blob([JSON.stringify(historias, null, 2)], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `todas_historias_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function mostrarResultadosBusqueda(pacientes) {
+            let html = `<div class="modal fade" id="modalBusqueda"><div class="modal-dialog modal-lg"><div class="modal-content">
+                <div class="modal-header"><h5>Resultados</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body"><table class="table"><thead><tr><th>ID</th><th>Apellidos</th><th>Nombres</th><th>Acción</th></tr></thead><tbody>`;
+            
+            pacientes.forEach(p => {
+                html += `<tr><td>${p.id}</td><td>${p.apellidos}</td><td>${p.nombres}</td>
+                    <td><button class="btn btn-sm btn-primary" onclick="cargarHistoria(${p.id})">Cargar</button></td></tr>`;
+            });
+            
+            html += '</tbody></table></div></div></div></div>';
+            document.body.insertAdjacentHTML('beforeend', html);
+            new bootstrap.Modal(document.getElementById('modalBusqueda')).show();
+        }
+
+        function cargarHistoria(id) {
+            const historias = JSON.parse(localStorage.getItem('historiasClinicas') || '[]');
+            const historia = historias.find(h => h.id == id);
+            if (historia) {
+                llenarFormulario(historia);
+                document.getElementById('modalBusqueda')?.remove();
+                alert('Historia cargada');
+            } else {
+                alert('Historia no encontrada');
+            }
+        }
+
+        function llenarFormulario(data) {
+            Object.keys(data).forEach(key => {
+                const el = document.querySelector(`[name="${key}"]`);
+                if (el) {
+                    if (el.type === 'checkbox') {
+                        el.checked = data[key] == 1;
+                    } else if (el.type === 'radio') {
+                        if (el.value === data[key]) el.checked = true;
+                    } else {
+                        el.value = data[key] || '';
+                    }
+                }
+            });
+        }
+
+        function limpiarFormulario() {
+            if (confirm('¿Limpiar todos los datos?')) {
+                document.getElementById('historiaClinica').reset();
+                document.querySelectorAll('.tooth').forEach(tooth => {
+                    const num = tooth.dataset.tooth;
+                    tooth.innerHTML = `<span class="tooth-number">${num}</span>`;
+                    tooth.style.background = 'white';
+                    tooth.style.color = 'black';
+                });
+                alert('Formulario limpiado');
+            }
+        }
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            createOdontogram();
+            initOdontogram();
+            document.querySelector('input[name="fecha_consulta"]').value = new Date().toISOString().split('T')[0];
+        });
+    </script>
+</body>
+</html>

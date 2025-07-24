@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Paciente - Sistema Odontológico UNAP</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --unap-blue: #1e3a8a;
+            --unap-light-blue: #3b82f6;
+            --unap-patient: #dc2626;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--unap-blue) 0%, var(--unap-light-blue) 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .register-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 0;
+        }
+        
+        .register-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 900px;
+            width: 100%;
+        }
+        
+        .register-header {
+            background: linear-gradient(45deg, var(--unap-patient), #dc2626);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .register-body {
+            padding: 40px;
+        }
+        
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid #e5e7eb;
+            padding: 12px 15px;
+        }
+        
+        .form-control:focus {
+            border-color: var(--unap-patient);
+            box-shadow: 0 0 0 0.2rem rgba(220, 38, 38, 0.25);
+        }
+        
+        .btn-paciente {
+            background: var(--unap-patient);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-paciente:hover {
+            background: #b91c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            color: white;
+        }
+        
+        .btn-back {
+            background: #6b7280;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            color: white;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-back:hover {
+            background: #4b5563;
+            color: white;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+        }
+        
+        .form-section h5 {
+            color: var(--unap-patient);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .required {
+            color: #dc3545;
+        }
+        
+        .alert-custom {
+            border-radius: 10px;
+            border: none;
+        }
+        
+        .form-check-input:checked {
+            background-color: var(--unap-patient);
+            border-color: var(--unap-patient);
+        }
+        
+        .emergency-contact {
+            background-color: #f8fafc;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+        
+        .medical-alert {
+            background-color: #fef2f2;
+            border: 2px solid #fecaca;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="container">
+            <div class="register-card">
+                <!-- Header -->
+                <div class="register-header">
+                    <h2><i class="fas fa-user-plus me-2"></i>Registro de Paciente</h2>
+                    <p class="mb-0">Complete el formulario para crear su cuenta en el sistema</p>
+                </div>
+                
+                <!-- Body -->
+                <div class="register-body">
+                    <div class="alert alert-info alert-custom mb-4">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Importante:</strong> Por favor, complete todos los campos obligatorios para poder brindarle una atención médica adecuada.
+                    </div>
+                    
+                    <form id="pacienteRegisterForm" method="POST" action="registro-paciente.php">
+
+                        <!-- Información Personal -->
+                        <div class="form-section">
+                            <h5><i class="fas fa-user me-2"></i>Información Personal</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="nombres" class="form-label">Nombres <span class="required">*</span></label>
+                                    <input type="text" class="form-control" id="nombres" name="nombres" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="apellidos" class="form-label">Apellidos <span class="required">*</span></label>
+                                    <input type="text" class="form-control" id="apellidos" name="apellidos" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="dni" class="form-label">DNI <span class="required">*</span></label>
+                                    <input type="text" class="form-control" id="dni" name="dni" maxlength="8" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="fecha-nacimiento" class="form-label">Fecha de Nacimiento <span class="required">*</span></label>
+                                    <input type="date" class="form-control" id="fecha-nacimiento" name="fecha-nacimiento" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="sexo" class="form-label">Sexo <span class="required">*</span></label>
+                                    <select class="form-control" id="sexo" name="sexo" required>
+                                        <option value="">Seleccionar...</option>
+                                        <option value="masculino">Masculino</option>
+                                        <option value="femenino">Femenino</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="estado-civil" class="form-label">Estado Civil</label>
+                                    <select class="form-control" id="estado-civil" name="estado-civil">
+                                        <option value="">Seleccionar...</option>
+                                        <option value="soltero">Soltero(a)</option>
+                                        <option value="casado">Casado(a)</option>
+                                        <option value="divorciado">Divorciado(a)</option>
+                                        <option value="viudo">Viudo(a)</option>
+                                        <option value="conviviente">Conviviente</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Información de Contacto -->
+                        <div class="form-section">
+                            <h5><i class="fas fa-phone me-2"></i>Información de Contacto</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="telefono" class="form-label">Teléfono <span class="required">*</span></label>
+                                    <input type="tel" class="form-control" id="telefono" name="telefono" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="telefono-emergencia" class="form-label">Teléfono de Emergencia</label>
+                                    <input type="tel" class="form-control" id="telefono-emergencia" name="telefono-emergencia">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Correo Electrónico <span class="required">*</span></label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="direccion" class="form-label">Dirección <span class="required">*</span></label>
+                                <textarea class="form-control" id="direccion" name="direccion" rows="3" required></textarea>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="distrito" class="form-label">Distrito <span class="required">*</span></label>
+                                    <input type="text" class="form-control" id="distrito" name="distrito" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="provincia" class="form-label">Provincia <span class="required">*</span></label>
+                                    <input type="text" class="form-control" id="provincia" name="provincia" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Contacto de Emergencia -->
+                        <div class="form-section">
+                            <h5><i class="fas fa-user-friends me-2"></i>Contacto de Emergencia</h5>
+                            <div class="emergency-contact">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="emergencia-nombre" class="form-label">Nombre Completo <span class="required">*</span></label>
+                                        <input type="text" class="form-control" id="emergencia-nombre" name="emergencia-nombre" required>
+
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="emergencia-parentesco" class="form-label">Parentesco <span class="required">*</span></label>
+                                        <select class="form-control" id="emergencia-parentesco" name="emergencia-parentesco" required>
+
+                                            <option value="">Seleccionar...</option>
+                                            <option value="padre">Padre</option>
+                                            <option value="madre">Madre</option>
+                                            <option value="esposo">Esposo(a)</option>
+                                            <option value="hijo">Hijo(a)</option>
+                                            <option value="hermano">Hermano(a)</option>
+                                            <option value="amigo">Amigo(a)</option>
+                                            <option value="otro">Otro</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="emergencia-telefono" class="form-label">Teléfono <span class="required">*</span></label>
+                                        <input type="tel" class="form-control" id="emergencia-telefono" name="emergencia-telefono" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="emergencia-email" class="form-label">Correo Electrónico</label>
+                                        <input type="email" class="form-control" id="emergencia-email" name="emergencia-email">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Información Médica -->
+                        <div class="form-section">
+                            <h5><i class="fas fa-heartbeat me-2"></i>Información Médica</h5>
+                            <div class="medical-alert">
+                                <h6><i class="fas fa-exclamation-triangle me-2"></i>Información Médica Importante</h6>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="tipo-sangre" class="form-label">Tipo de Sangre</label>
+                                        <select class="form-control" id="tipo-sangre" name="tipo-sangre">
+                                            <option value="">Seleccionar...</option>
+                                            <option value="A+">A+</option>
+                                            <option value="A-">A-</option>
+                                            <option value="B+">B+</option>
+                                            <option value="B-">B-</option>
+                                            <option value="AB+">AB+</option>
+                                            <option value="AB-">AB-</option>
+                                            <option value="O+">O+</option>
+                                            <option value="O-">O-</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="seguro-medico" class="form-label">Seguro Médico</label>
+                                        <select class="form-control" id="seguro-medico" name="seguro-medico">
+                                            <option value="">Seleccionar...</option>
+                                            <option value="essalud">EsSalud</option>
+                                            <option value="sis">SIS</option>
+                                            <option value="privado">Seguro Privado</option>
+                                            <option value="ninguno">Ninguno</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="alergias" class="form-label">Alergias y Reacciones Adversas</label>
+                                    <textarea class="form-control" id="alergias" name="alergias" rows="3"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="medicamentos" class="form-label">Medicamentos Actuales</label>
+                                    <textarea class="form-control" id="medicamentos" name="medicamentos" rows="3"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="enfermedades" class="form-label">Enfermedades y Condiciones Médicas</label>
+                                    <textarea class="form-control" id="enfermedades" name="enfermedades" rows="3"></textarea>
+
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Historial Odontológico -->
+                        <div class="form-section">
+                            <h5><i class="fas fa-tooth me-2"></i>Historial Odontológico</h5>
+                            <div class="mb-3">
+                                <label for="ultima-consulta" class="form-label">Última Consulta Odontológica</label>
+                                <input type="date" class="form-control" id="ultima-consulta" name="ultima-consulta">
+                            </div>
+                            <div class="mb-3">
+                                <label for="motivo-consulta" class="form-label">Motivo de la Consulta Actual</label>
+                                <textarea class="form-control" id="motivo-consulta" name="motivo-consulta" rows="3"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="problemas-dentales" class="form-label">Problemas Dentales Previos</label>
+                                <textarea class="form-control" id="problemas-dentales" name="problemas-dentales" rows="3"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Hábitos de Higiene Oral</label>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="cepillado-diario" name="cepillado-diario">
+                                            <label class="form-check-label" for="cepillado-diario">
+                                                Cepillado diario
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="uso-hilo" name="uso-hilo">
+                                            <label class="form-check-label" for="uso-hilo">
+                                                Uso de hilo dental
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="enjuague-bucal" name="enjuague-bucal">
+                                            <label class="form-check-label" for="enjuague-bucal">
+                                                Enjuague bucal
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Acceso al Sistema -->
+                        <div class="form-section">
+                            <h5><i class="fas fa-key me-2"></i>Acceso al Sistema</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="password" class="form-label">Contraseña <span class="required">*</span></label>
+                                    <input type="password" class="form-control" id="password" name="password" required>
+                                    <div class="form-text">Mínimo 8 caracteres, incluir mayúsculas, minúsculas y números</div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="confirm-password" class="form-label">Confirmar Contraseña <span class="required">*</span></label>
+                                    <input type="password" class="form-control" id="confirm-password" name="confirm-password" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Términos y Condiciones -->
+                        <div class="form-section">
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="terms" name="terms" required>
+                                <label class="form-check-label" for="terms">
+                                    Acepto los <a href="#" class="text-decoration-none">términos y condiciones</a> del sistema <span class="required">*</span>
+                                </label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="privacy" name="privacy" required>
+                                <label class="form-check-label" for="privacy">
+                                    Acepto el tratamiento de mis datos personales y médicos según la <a href="#" class="text-decoration-none">política de privacidad</a> <span class="required">*</span>
+                                </label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="medical-consent" name="medical-consent">
+                                <label class="form-check-label" for="medical-consent">
+                                    Autorizo el intercambio de información médica con profesionales de la salud para mi atención
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Botones -->
+                        <div class="d-flex justify-content-between">
+                            <button type="button" class="btn btn-back" onclick="goBack()">
+                                <i class="fas fa-arrow-left me-2"></i>Volver
+                            </button>
+                            <button type="submit" class="btn btn-paciente">
+                                <i class="fas fa-user-check me-2"></i>Crear Cuenta
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Form validation and submission
+       
+        
+        // DNI validation
+        document.getElementById('dni').addEventListener('input', function(e) {
+            this.value = this.value.replace(/\D/g, '');
+        });
+        
+        // Phone number validation
+        document.getElementById('telefono').addEventListener('input', function(e) {
+            this.value = this.value.replace(/\D/g, '');
+        });
+        
+        document.getElementById('telefono-emergencia').addEventListener('input', function(e) {
+            this.value = this.value.replace(/\D/g, '');
+        });
+        
+        document.getElementById('emergencia-telefono').addEventListener('input', function(e) {
+            this.value = this.value.replace(/\D/g, '');
+        });
+        
+        // Calculate age automatically
+        document.getElementById('fecha-nacimiento').addEventListener('change', function(e) {
+            const birthDate = new Date(e.target.value);
+            const today = new Date();
+            const age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            
+            if (age < 18 || (age === 18 && monthDiff < 0)) {
+                alert('Nota: Debe ser mayor de 18 años para registrarse como paciente');
+            }
+        });
+        
+        // Function to go back
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Odontólogo - Sistema UNAP FINESI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --unap-blue: #1e3a8a;
+            --unap-light-blue: #3b82f6;
+            --dental-blue: #0ea5e9;
+            --dental-teal: #14b8a6;
+            --success: #16a34a;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+        
+        body {
+            background: #f8fafc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .sidebar {
+            background: linear-gradient(135deg, var(--unap-blue) 0%, var(--dental-blue) 100%);
+            min-height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .sidebar.collapsed {
+            width: 80px;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            color: white;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-menu li {
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+        
+        .sidebar-menu i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .main-content.expanded {
+            margin-left: 80px;
+        }
+        
+        .header-bar {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--dental-blue);
+        }
+        
+        .stat-card.warning {
+            border-left-color: var(--warning);
+        }
+        
+        .stat-card.danger {
+            border-left-color: var(--danger);
+        }
+        
+        .stat-card.success {
+            border-left-color: var(--success);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            background: var(--dental-blue);
+            color: white;
+            border-radius: 10px 10px 0 0 !important;
+            padding: 15px 20px;
+        }
+        
+        .table th {
+            background: #f8fafc;
+            color: var(--unap-blue);
+            font-weight: 600;
+        }
+        
+        .btn-primary {
+            background: var(--dental-blue);
+            border-color: var(--dental-blue);
+        }
+        
+        .btn-primary:hover {
+            background: var(--dental-teal);
+            border-color: var(--dental-teal);
+        }
+        
+        .badge {
+            padding: 8px 12px;
+            border-radius: 20px;
+        }
+        
+        .modal-header {
+            background: var(--dental-blue);
+            color: white;
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--dental-blue);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -22px;
+            top: 20px;
+            width: 12px;
+            height: 12px;
+            background: var(--dental-blue);
+            border-radius: 50%;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 80px;
+            }
+            
+            .main-content {
+                margin-left: 80px;
+            }
+            
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-tooth fa-2x mb-2"></i>
+            <h5 class="mb-0">UNAP FINESI</h5>
+            <small>Odontología</small>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li><a href="#" class="active" onclick="showSection('dashboard')"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="#" onclick="showSection('pacientes')"><i class="fas fa-users"></i> Pacientes</a></li>
+            <li><a href="#" onclick="showSection('citas')"><i class="fas fa-calendar-alt"></i> Citas</a></li>
+            <li><a href="#" onclick="showSection('tratamientos')"><i class="fas fa-procedures"></i> Tratamientos</a></li>
+            <li><a href="#" onclick="showSection('seguimiento')"><i class="fas fa-chart-line"></i> Seguimiento</a></li>
+            <li><a href="#" onclick="showSection('reportes')"><i class="fas fa-file-alt"></i> Reportes</a></li>
+            <li><a href="#" onclick="showSection('perfil')"><i class="fas fa-user"></i> Perfil</a></li>
+        </ul>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <!-- Header -->
+        <div class="header-bar">
+            <div class="d-flex align-items-center">
+                <button class="btn btn-outline-primary me-3" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h4 class="mb-0">Bienvenido, Dr. García</h4>
+            </div>
+            <div class="d-flex align-items-center">
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Perfil</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Configuración</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Dashboard Section -->
+        <div id="dashboard-section" class="content-section">
+            <!-- Stats Cards -->
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="stat-number text-primary">24</div>
+                            <div class="text-muted">Pacientes Activos</div>
+                        </div>
+                        <i class="fas fa-users fa-2x text-primary"></i>
+                    </div>
+                </div>
+                
+                <div class="stat-card warning">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="stat-number text-warning">8</div>
+                            <div class="text-muted">Seguimientos Pendientes</div>
+                        </div>
+                        <i class="fas fa-exclamation-triangle fa-2x text-warning"></i>
+                    </div>
+                </div>
+                
+                <div class="stat-card success">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="stat-number text-success">12</div>
+                            <div class="text-muted">Tratamientos Completados</div>
+                        </div>
+                        <i class="fas fa-check-circle fa-2x text-success"></i>
+                    </div>
+                </div>
+                
+                <div class="stat-card danger">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="stat-number text-danger">3</div>
+                            <div class="text-muted">Citas Hoy</div>
+                        </div>
+                        <i class="fas fa-calendar-day fa-2x text-danger"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions & Recent Activity -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="fas fa-bolt me-2"></i>Acciones Rápidas</h5>
+                        </div>
+                        <div class="card-body">
+                            <button class="btn btn-primary w-100 mb-2" onclick="showModal('nuevoPaciente')">
+                                <i class="fas fa-user-plus me-2"></i>Nuevo Paciente
+                            </button>
+                            <button class="btn btn-outline-primary w-100 mb-2" onclick="showModal('nuevaCita')">
+                                <i class="fas fa-calendar-plus me-2"></i>Nueva Cita
+                            </button>
+                            <button class="btn btn-outline-secondary w-100" onclick="showSection('seguimiento')">
+                                <i class="fas fa-search me-2"></i>Buscar Paciente
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="fas fa-clock me-2"></i>Citas de Hoy</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="list-group list-group-flush">
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">Ana Pérez</h6>
+                                        <small class="text-muted">09:00 - Control post-endodoncia</small>
+                                    </div>
+                                    <span class="badge bg-primary">Próxima</span>
+                                </div>
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">Carlos Mamani</h6>
+                                        <small class="text-muted">14:30 - Seguimiento implante</small>
+                                    </div>
+                                    <span class="badge bg-success">Confirmada</span>
+                                </div>
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">María Quispe</h6>
+                                        <small class="text-muted">16:00 - Control ortodoncia</small>
+                                    </div>
+                                    <span class="badge bg-warning">Pendiente</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pacientes Section -->
+        <div id="pacientes-section" class="content-section d-none">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-users me-2"></i>Pacientes</h5>
+                    <button class="btn btn-light btn-sm" onclick="showModal('nuevoPaciente')">
+                        <i class="fas fa-plus me-1"></i>Nuevo Paciente
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Edad</th>
+                                    <th>Última Cita</th>
+                                    <th>Tratamiento</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pacientesTable">
+                                <tr>
+                                    <td>Ana Pérez López</td>
+                                    <td>28</td>
+                                    <td>15/07/2025</td>
+                                    <td>Endodoncia</td>
+                                    <td><span class="badge bg-warning">En tratamiento</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="verPaciente(1)">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-success" onclick="editarPaciente(1)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Carlos Mamani Quispe</td>
+                                    <td>35</td>
+                                    <td>10/07/2025</td>
+                                    <td>Implante</td>
+                                    <td><span class="badge bg-success">Completado</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="verPaciente(2)">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-success" onclick="editarPaciente(2)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Seguimiento Section -->
+        <div id="seguimiento-section" class="content-section d-none">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Seguimiento Post-Tratamiento</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h6>Filtros de Búsqueda</h6>
+                                    <div class="mb-3">
+                                        <label class="form-label">Paciente</label>
+                                        <input type="text" class="form-control" placeholder="Buscar paciente...">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Tipo de Tratamiento</label>
+                                        <select class="form-control">
+                                            <option value="">Todos</option>
+                                            <option value="endodoncia">Endodoncia</option>
+                                            <option value="implante">Implante</option>
+                                            <option value="ortodoncia">Ortodoncia</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Estado</label>
+                                        <select class="form-control">
+                                            <option value="">Todos</option>
+                                            <option value="pendiente">Pendiente</option>
+                                            <option value="en_progreso">En Progreso</option>
+                                            <option value="completado">Completado</option>
+                                        </select>
+                                    </div>
+                                    <button class="btn btn-primary w-100">Filtrar</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-8">
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h6>Ana Pérez - Endodoncia</h6>
+                                            <p class="text-muted mb-1">Control post-operatorio programado</p>
+                                            <small class="text-muted">Fecha: 20/07/2025</small>
+                                        </div>
+                                        <span class="badge bg-warning">Pendiente</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="timeline-item">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h6>Carlos Mamani - Implante</h6>
+                                            <p class="text-muted mb-1">Seguimiento de cicatrización exitoso</p>
+                                            <small class="text-muted">Fecha: 15/07/2025</small>
+                                        </div>
+                                        <span class="badge bg-success">Completado</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="timeline-item">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h6>María Quispe - Ortodoncia</h6>
+                                            <p class="text-muted mb-1">Ajuste de brackets programado</p>
+                                            <small class="text-muted">Fecha: 18/07/2025</small>
+                                        </div>
+                                        <span class="badge bg-info">En Progreso</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Nuevo Paciente -->
+    <div class="modal fade" id="nuevoPacienteModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-user-plus me-2"></i>Nuevo Paciente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="nuevoPacienteForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Nombres</label>
+                                    <input type="text" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Apellidos</label>
+                                    <input type="text" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">DNI</label>
+                                    <input type="text" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Fecha de Nacimiento</label>
+                                    <input type="date" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Teléfono</label>
+                                    <input type="tel" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Dirección</label>
+                            <textarea class="form-control" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary">Guardar Paciente</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Variables globales
+        let sidebarCollapsed = false;
+        
+        // Toggle sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            
+            sidebarCollapsed = !sidebarCollapsed;
+            
+            if (sidebarCollapsed) {
+                sidebar.classList.add('collapsed');
+                mainContent.classList.add('expanded');
+            } else {
+                sidebar.classList.remove('collapsed');
+                mainContent.classList.remove('expanded');
+            }
+        }
+        
+        // Show section
+        function showSection(sectionName) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.add('d-none'));
+            
+            // Show selected section
+            document.getElementById(sectionName + '-section').classList.remove('d-none');
+            
+            // Update menu active state
+            const menuItems = document.querySelectorAll('.sidebar-menu a');
+            menuItems.forEach(item => item.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+        
+        // Show modal
+        function showModal(modalName) {
+            const modal = new bootstrap.Modal(document.getElementById(modalName + 'Modal'));
+            modal.show();
+        }
+        
+        // Ver paciente
+        function verPaciente(id) {
+            alert('Ver detalles del paciente ID: ' + id);
+        }
+        
+        // Editar paciente
+        function editarPaciente(id) {
+            alert('Editar paciente ID: ' + id);
+        }
+        
+        // Animación de números
+        function animateNumbers() {
+            const numbers = document.querySelectorAll('.stat-number');
+            numbers.forEach(num => {
+                const target = parseInt(num.textContent);
+                let current = 0;
+                const increment = target / 30;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    num.textContent = Math.floor(current);
+                }, 50);
+            });
+        }
+        
+        // Responsive sidebar
+        function handleResize() {
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.add('collapsed');
+                document.getElementById('mainContent').classList.add('expanded');
+                sidebarCollapsed = true;
+            }
+        }
+        
+        // Initialize
+        window.addEventListener('load', () => {
+            animateNumbers();
+            handleResize();
+        });
+        
+        window.addEventListener('resize', handleResize);
+        
+        // Simulate real-time updates
+        setInterval(() => {
+            const badges = document.querySelectorAll('.badge');
+            badges.forEach(badge => {
+                if (Math.random() > 0.98) {
+                    badge.classList.add('animate__animated', 'animate__pulse');
+                    setTimeout(() => {
+                        badge.classList.remove('animate__animated', 'animate__pulse');
+                    }, 1000);
+                }
+            });
+        }, 5000);
+    </script>
+</body>
+</html>
